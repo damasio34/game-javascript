@@ -22,14 +22,14 @@
 
 		var chao = {
 			y: 550,
-			altura: 50, 
+			altura: 50,
 			cor: "#FFDF78",
 
 			desenha: function() {
 				ctx.fillStyle = this.cor;
 				ctx.fillRect(0, this.y, LARGURA, this.altura);
 			}
-		};	
+		};
 
 		var bloco = {
 			x: 50,
@@ -55,7 +55,7 @@
 			pula: function() {
 				if (this.qntPulos < maxPulos) {
 					this.velocidade = -this.forcaDoPulo;
-					this.qntPulos++;					
+					this.qntPulos++;
 				};
 			},
 
@@ -63,7 +63,37 @@
 				ctx.fillStyle = this.cor;
 				ctx.fillRect(this.x, this.y, this.largura, this.altura);
 			}
-		}
+		};
+
+		var obstaculos = {
+			_obs: [],
+			_cor: ["#FFBC1C", "#FF1C1C", "#FF85E1", "#52A7FF", "#78FF5D"],
+			timerInsere: 0,
+
+			insere: function () {
+				this._obs.push({
+					x: 200,
+					altura: 20 + Math.floor(100 * Math.random()),
+					largura: 50 + Math.floor(10 * Math.random()),
+					cor: this._cor[Math.floor(5 * Math.random())]
+				});
+
+				this.timerInsere = 30 + Math.floor(10 * Math.random());
+			},
+
+			atualiza: function () {
+				if (this.timerInsere == 0) this.insere();
+			},
+
+			desenha: function () {
+				for (var i = 0, tam = this._obs.length; i < tam; i++) {
+					var obs = this._obs[i];
+
+					ctx.fillStyle = obs.cor;
+					ctx.fillRect(obs.x, chao.y - obs.altura, obs.largura, obs.altura);
+				};
+			}
+		};
 
 		function clique (event) {
 			bloco.pula();
@@ -109,6 +139,7 @@
 			ctx.fillRect(0, 0, LARGURA, ALTURA);
 
 			chao.desenha();
+			obstaculos.desenha();
 			bloco.desenha();
 		};
 
